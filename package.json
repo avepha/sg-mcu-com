@@ -4,7 +4,7 @@
   "description": "",
   "main": "createServer.js",
   "scripts": {
-    "build": "babel src/index.js -d dist",
+    "build": "webpack",
     "dev": "nodemon --exec babel-node src/index.js",
     "start": "babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +20,7 @@
     "@types/express": "^4.17.2",
     "@types/lodash": "^4.14.149",
     "@types/serialport": "^7.0.4",
+    "babel-loader": "^8.0.6",
     "nodemon": "^2.0.1"
   },
   "dependencies": {
