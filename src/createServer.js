@@ -7,11 +7,16 @@ import {createSerialPort, serialPort} from './serialport'
 import Readline from '@serialport/parser-readline'
 import {isJson} from './helpers/isJson'
 import bindings from '@serialport/bindings'
+import path from 'path'
+import rootPath from 'app-root-path'
 
 const app = express()
+const root = path.join(path.resolve(rootPath.path, './build/'))
+app.use(express.static(root))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 app.use(cors())
+
 const server = Server(app)
 const io = require('socket.io')(server)
 
