@@ -2,7 +2,10 @@
   "name": "sg-mcu-com",
   "version": "1.0.1",
   "description": "",
-  "main": "createServer.js",
+  "main": "bin/index.js",
+  "bin": {
+    "mcucom": "./bin/index.js"
+  },
   "scripts": {
     "build": "babel src --out-dir bin",
     "dev": "nodemon --exec babel-node src/index.js",

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import server from './createServer'
 const port = 4002
 
