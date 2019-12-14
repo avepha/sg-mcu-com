@@ -1,7 +1,12 @@
 import SerialPort from 'serialport'
-//import MockBinding from '@serialport/binding-mock'
-//SerialPort.Binding = MockBinding
-//MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
+import MockBinding from '@serialport/binding-mock'
+
+if (process.env.MOCK) {
+  SerialPort.Binding = MockBinding
+  MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
+  console.log('[Info] Mock binding: Activated!')
+  console.log('[Info] /dev/ROBOT is activated')
+}
 
 export let serialPort = undefined
 
