@@ -9,6 +9,7 @@ import {isJson} from './helpers/isJson'
 import bindings from '@serialport/bindings'
 import path from 'path'
 import rootPath from 'app-root-path'
+import routes from './module/routes'
 
 const app = express()
 const root = path.join(path.resolve(rootPath.path, './build/'))
@@ -23,6 +24,8 @@ const io = require('socket.io')(server)
 io.on('connection', () => {
   console.log('[Info] Client is connected')
 })
+
+Object.keys(routes).map((route) => app.use(route, routes[route]))
 
 app.get('/info', async (req, res) => {
   if (!serialPort || !serialPort.isOpen) {
