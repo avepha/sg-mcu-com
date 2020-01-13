@@ -67,7 +67,6 @@ app.post('/connect', async (req, res) => {
 
     const parser = serialPort.pipe(new Readline({delimiter: '\r\n'}))
     parser.on('data', (data) => {
-      console.log(data)
       const isJsonData = isJson(data)
       io.emit('listening', {
         type: isJsonData ? 'json' : 'text',
