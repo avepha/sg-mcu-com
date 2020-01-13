@@ -27,6 +27,10 @@ var _path = _interopRequireDefault(require("path"));
 
 var _appRootPath = _interopRequireDefault(require("app-root-path"));
 
+var _routes = _interopRequireDefault(require("./module/routes"));
+
+require("./module/prepareModel");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const app = (0, _express.default)();
@@ -46,6 +50,7 @@ const io = require('socket.io')(server);
 io.on('connection', () => {
   console.log('[Info] Client is connected');
 });
+Object.keys(_routes.default).map(route => app.use(route, _routes.default[route]));
 app.get('/info', async (req, res) => {
   if (!_serialport.serialPort || !_serialport.serialPort.isOpen) {
     return res.json({

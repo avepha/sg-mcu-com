@@ -12,5 +12,7 @@ const port = 4002;
 _createServer.default.listen(port, () => {
   console.log(`🚀 Server ready at http://localhost:${port}`);
 
-  _child_process.default.exec('open -a "Google Chrome" http://localhost:4002/', () => null);
+  if (process.platform === 'darwin' && process.env.NODE_ENV === 'production') {
+    _child_process.default.exec('open -a "Google Chrome" http://localhost:4002/', () => null);
+  }
 });

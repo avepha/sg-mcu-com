@@ -2,3 +2,4 @@ node_modules
 .idea
 /socketio-client-tool/
 package-lock.json
+src/datasource/db.db
