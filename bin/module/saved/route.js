@@ -44,6 +44,23 @@ router.post('/', async (req, res) => {
     result
   });
 });
+router.post('/deletes', async (req, res) => {
+  const {
+    id
+  } = req.body;
+
+  if (!id) {
+    res.status(403);
+    return res.json({
+      message: 'Invalid argument, required id.'
+    });
+  }
+
+  const results = await provider.deleteById(id);
+  res.json({
+    effect: results
+  });
+});
 router.get('/', async (req, res) => {
   const results = await provider.getAll({
     limit: 50

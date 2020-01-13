@@ -11,7 +11,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _sequalize.default.sync({
-  force: true
+  force: false
 }).then(async () => {
   await savedProvider.prepareData();
 });

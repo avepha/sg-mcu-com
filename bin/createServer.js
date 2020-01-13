@@ -95,7 +95,6 @@ app.post('/connect', async (req, res) => {
       delimiter: '\r\n'
     }));
     parser.on('data', data => {
-      console.log(data);
       const isJsonData = (0, _isJson.isJson)(data);
       io.emit('listening', {
         type: isJsonData ? 'json' : 'text',

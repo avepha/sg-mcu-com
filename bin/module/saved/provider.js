@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.prepareData = exports.getAll = exports.create = void 0;
+exports.deleteById = exports.prepareData = exports.getAll = exports.create = void 0;
 
 var _model = _interopRequireDefault(require("./model"));
 
@@ -34,20 +34,36 @@ const getAll = ({
 exports.getAll = getAll;
 
 const prepareData = async () => {
-  const presets = require('./data').default;
+  const results = await getAll({
+    limit: 10
+  });
 
-  for (let i = 0; i < presets.length; i++) {
-    const {
-      header,
-      data
-    } = presets[i];
-    await create({
-      data,
-      header
-    });
+  if (results.length === 0) {
+    const presets = require('./data').default;
+
+    for (let i = 0; i < presets.length; i++) {
+      const {
+        header,
+        data
+      } = presets[i];
+      await create({
+        data,
+        header
+      });
+    }
   }
 
   return Promise.resolve(true);
 };
 
 exports.prepareData = prepareData;
+
+const deleteById = async id => {
+  return _model.default.destroy({
+    where: {
+      id
+    }
+  });
+};
+
+exports.deleteById = deleteById;
