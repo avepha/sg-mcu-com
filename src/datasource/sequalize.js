@@ -5,8 +5,4 @@ const sequelize = new Sequelize({
   storage: `${__dirname}/db.db`,
 })
 
-sequelize.sync({
-  force: true
-})
-
 export default sequelize

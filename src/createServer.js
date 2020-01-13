@@ -10,6 +10,7 @@ import bindings from '@serialport/bindings'
 import path from 'path'
 import rootPath from 'app-root-path'
 import routes from './module/routes'
+import './module/prepareModel'
 
 const app = express()
 const root = path.join(path.resolve(rootPath.path, './build/'))

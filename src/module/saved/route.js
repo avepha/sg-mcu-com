@@ -26,9 +26,4 @@ router.get('/', async (req, res) => {
   res.json(results)
 })
 
-router.get('/prepare', async (_, res) => {
-  await provider.prepareData()
-  res.json({message: 'successful'})
-})
-
 export default router

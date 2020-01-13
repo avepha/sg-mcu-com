@@ -1,21 +1,29 @@
 const presets = [
   {
-    reqId: 'req-01',
-    header: 'debug',
+    header: 'debug_save',
     data: {
+      reqId: 'req-01',
       topic: 'debug_save',
-      method: 'query',
+      method: 'mutation',
       data: {
         debug: true
       }
     }
   },
   {
-    reqId: 'req-02',
     header: 'info',
     data: {
+      reqId: 'req-02',
       topic: 'info',
       method: 'query'
+    }
+  },
+  {
+    header: 'clear memory',
+    data: {
+      reqId: 'req-1',
+      topic: 'clear_nvmemory',
+      method: 'mutation',
     }
   },
 ]
