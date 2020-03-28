@@ -72,9 +72,10 @@ app.post('/connect', async (req, res) => {
         const response = JSON.parse(data)
         if (response["method"] === "log") {
           const rData = response["data"]
-          return io.emit('listening', {
+          return io.emit('log', {
             type: 'text',
-            data: `[${new Date().toLocaleTimeString()}] [${rData["topic"]}] ${rData["message"]}`})
+            data: `[${new Date().toLocaleTimeString()}][${rData["level"]}][${rData["topic"]}] ${rData["message"]}`
+          })
         }
         else {
           return io.emit('listening', {type: 'json', data: response})

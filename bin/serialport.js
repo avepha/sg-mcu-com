@@ -31,15 +31,17 @@ const createSerialPort = async ({
   baudRate = 115200
 }) => {
   return new Promise((resolve, reject) => {
-    const temp = new _serialport.default(port, {
+    const _sp = new _serialport.default(port, {
       baudRate,
       autoOpen: true
     });
-    temp.on('error', e => {
+
+    _sp.on('error', e => {
       reject(e);
     });
-    temp.on('open', () => {
-      exports.serialPort = serialPort = temp;
+
+    _sp.on('open', () => {
+      exports.serialPort = serialPort = _sp;
       resolve(serialPort);
     });
   });
