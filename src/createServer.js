@@ -68,9 +68,22 @@ app.post('/connect', async (req, res) => {
     const parser = serialPort.pipe(new Readline({delimiter: '\r\n'}))
     parser.on('data', (data) => {
       const isJsonData = isJson(data)
-      io.emit('listening', {
-        type: isJsonData ? 'json' : 'text',
-        data: isJsonData ? JSON.parse(data) : data
+      if (isJsonData) {
+        const response = JSON.parse(data)
+        if (response["method"] === "log") {
+          const rData = response["data"]
+          return io.emit('listening', {
+            type: 'text',
+            data: `[${new Date().toLocaleTimeString()}] [${rData["topic"]}] ${rData["message"]}`})
+        }
+        else {
+          return io.emit('listening', {type: 'json', data: response})
+        }
+      }
+
+      return io.emit('listening', {
+        type: 'text',
+        data: data
       })
     })
 

@@ -12,17 +12,17 @@ export let serialPort = undefined
 
 export const createSerialPort = async ({port, baudRate = 115200}) => {
   return new Promise((resolve, reject) => {
-    const temp = new SerialPort(port, {
+    const _sp = new SerialPort(port, {
       baudRate,
       autoOpen: true,
     })
 
-    temp.on('error', (e) => {
+    _sp.on('error', (e) => {
       reject(e)
     })
 
-    temp.on('open', () => {
-      serialPort = temp
+    _sp.on('open', () => {
+      serialPort = _sp
       resolve(serialPort)
     })
   })
