@@ -103,6 +103,10 @@ app.post('/connect', async (req, res) => {
         if (response["method"] === "log") {
           const rData = response["data"];
           return io.emit('log', {
+            meta: {
+              topic: rData["topic"],
+              level: rData["level"]
+            },
             type: 'text',
             data: `[${new Date().toLocaleTimeString()}][${rData["level"]}][${rData["topic"]}] ${rData["message"]}`
           });
