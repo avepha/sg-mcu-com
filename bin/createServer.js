@@ -119,7 +119,7 @@ app.post('/connect', async (req, res) => {
                 level: 'trace'
               },
               type: 'text',
-              data: `[${new Date().toLocaleTimeString()}][noti][${noti["type"]}] ${JSON.stringify(noti["data"])}`
+              data: `[${new Date().toLocaleTimeString()}][noti-${noti["id"]}][${noti["type"]}] ${JSON.stringify(noti["data"])}`
             });
           });
         } else {
