@@ -110,6 +110,18 @@ app.post('/connect', async (req, res) => {
             type: 'text',
             data: `[${new Date().toLocaleTimeString()}][${rData["level"]}][${rData["topic"]}] ${rData["message"]}`
           });
+        } else if (response["method"] === 'notification') {
+          const notifications = response["data"];
+          return notifications.map(noti => {
+            return io.emit('log', {
+              meta: {
+                topic: 'notification',
+                level: 'trace'
+              },
+              type: 'text',
+              data: `[${new Date().toLocaleTimeString()}][noti][${noti["type"]}] ${JSON.stringify(noti["data"])}`
+            });
+          });
         } else {
           return io.emit('listening', {
             type: 'json',
