@@ -167,7 +167,14 @@ app.post('/commit', async ({body}, res) => {
     })
   }
 
-  serialPort.write(`${JSON.stringify(body.data)}\r\n`)
+  const cmds = body.data
+  if (Array.isArray(cmds)) {
+    cmds.forEach(cmd=> {
+      serialPort.write(`${JSON.stringify(cmd)}\r\n`)
+    })
+  }
+
+  serialPort.write(`${JSON.stringify(cmds)}\r\n`)
 
   res.json({
     status: 'success'
