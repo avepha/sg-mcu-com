@@ -3,3 +3,4 @@ node_modules
 /socketio-client-tool/
 package-lock.json
 src/datasource/db.db
+arm*
