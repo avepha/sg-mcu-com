@@ -5,7 +5,7 @@ import server from './createServer'
 
 const port = 4002
 
-server.listen(port, () => {
+server.listen(port, '0.0.0.0', () => {
   console.log('Running version: ' + pgk.version)
   console.log(`🚀 Server ready at http://localhost:${port}`)
   if (process.platform === 'darwin' && process.env.NODE_ENV === 'production') {

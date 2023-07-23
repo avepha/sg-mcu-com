@@ -198,7 +198,15 @@ app.post('/commit', async ({
     });
   }
 
-  _serialport.serialPort.write(`${JSON.stringify(body.data)}\r\n`);
+  const cmds = body.data;
+
+  if (Array.isArray(cmds)) {
+    cmds.forEach(cmd => {
+      _serialport.serialPort.write(`${JSON.stringify(cmd)}\r\n`);
+    });
+  }
+
+  _serialport.serialPort.write(`${JSON.stringify(cmds)}\r\n`);
 
   res.json({
     status: 'success'

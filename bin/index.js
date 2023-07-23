@@ -11,7 +11,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const port = 4002;
 
-_createServer.default.listen(port, () => {
+_createServer.default.listen(port, '0.0.0.0', () => {
   console.log('Running version: ' + _package.default.version);
   console.log(`🚀 Server ready at http://localhost:${port}`);
 
