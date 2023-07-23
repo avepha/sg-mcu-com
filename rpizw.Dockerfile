@@ -1,8 +1,8 @@
 FROM rustembedded/cross:arm-unknown-linux-gnueabihf
 
 RUN dpkg --add-architecture armhf
-RUN apt-get update &&\
-    apt-get install -y pkg-config libudev-dev:armhf libsqlite3-dev:armhf python3 make g++ udev wget tar \
+RUN apt-get update
+RUN apt-get install -y pkg-config libudev-dev:armhf libsqlite3-dev:armhf python3 make g++ udev wget tar
 
 WORKDIR /app
 
