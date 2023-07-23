@@ -1,6 +1,5 @@
 FROM balenalib/raspberry-pi-debian:latest
 
-RUN dpkg --add-architecture armhf
 RUN apt-get update
 
 #FROM rustembedded/cross:arm-unknown-linux-gnueabihf
