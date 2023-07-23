@@ -58,7 +58,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Run Docker image
-        run: docker run --rm -i -v $(pwd):/app -w /app ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest npm install --production
+        run: docker run --rm -v $(pwd):/app -w /app ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
