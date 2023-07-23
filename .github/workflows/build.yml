@@ -53,7 +53,9 @@ jobs:
       matrix:
         include:
           - os: linux-armv6
+            platform: linux/arm/v6
           - os: linux-armv7
+            platform: linux/arm/v7
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -65,7 +67,7 @@ jobs:
           platforms: linux/arm/v6,linux/arm/v7
 
       - name: Run Docker image
-        run: docker run --rm -v $(pwd):/app -w /app ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest
+        run: docker run --platform=${{ matrix.platform }} --rm -v $(pwd):/app -w /app ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest
       - name: Archive Code
         run: zip -r app.zip .
       - name: Upload artifact
