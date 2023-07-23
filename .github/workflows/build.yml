@@ -75,7 +75,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            /app
+            app.zip
           tag_name: ${{ github.sha }}
           name: ${{ github.sha }}
           body: |
