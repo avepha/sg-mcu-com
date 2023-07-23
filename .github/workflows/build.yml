@@ -53,7 +53,7 @@ jobs:
       matrix:
         include:
           - os: linux-armv6
-            platform: linux/arm/v6
+            platform: linux/amd64
           - os: linux-armv7
             platform: linux/arm/v7
     steps:
