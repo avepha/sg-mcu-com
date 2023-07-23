@@ -67,8 +67,10 @@ jobs:
         with:
           platform: linux/arm/v6,linux/arm/v7
 
-      - name: Run Docker image
-        run: docker run --platform=linux/arm/v6 --rm -v $(pwd):/app -w /app ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest
+#      - name: Run Docker image
+#        run: docker run --platform=linux/arm/v6 --rm -v $(pwd):/app -w /app ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest
+      - name: Archive Code
+        run: zip -r app.zip .
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
