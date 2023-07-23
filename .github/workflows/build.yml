@@ -121,6 +121,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./${{ matrix.os }}/app.zip
-          asset_name: app-${{ matrix.os }}
+          asset_name: app-${{ matrix.os }}.zip
           tag: ${{ needs.github_release.outputs.tag }}
           overwrite: true
