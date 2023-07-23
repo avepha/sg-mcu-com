@@ -39,3 +39,38 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest
+  build_released_binary:
+    needs: build_docker
+    name: Create binary release for ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - target: arm-unknown-linux-gnueabihf
+            os: linux-armv6
+#          - target: armv7-unknown-linux-gnueabihf
+#            os: linux-armv7
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Run Docker image
+        run: docker run --rm -it -v $(pwd):/app -w /app ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest npm install --production
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            /app
+          tag_name: ${{ github.sha }}
+          name: ${{ github.sha }}
+          body: |
+            ${{ github.sha }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
