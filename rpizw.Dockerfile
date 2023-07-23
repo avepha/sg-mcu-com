@@ -1,5 +1,6 @@
 FROM balenalib/raspberry-pi-debian-node:14.21.2-buster-build
 
+RUN wget https://archive.raspbian.org/raspbian.public.key -O - | sudo apt-key add -
 RUN apt-get update
 
 RUN apt-get install -y --allow-unauthenticated python3 make g++ udev wget tar
