@@ -11,8 +11,8 @@ jobs:
         include:
           - os: linux-armv6
             dockerfile: rpizw.Dockerfile
-    #          - os: linux-armv7
-    #            dockerfile: rpi3.Dockerfile
+          - os: linux-armv7
+            dockerfile: rpi3.Dockerfile
 
     steps:
       - uses: actions/checkout@v3
@@ -52,10 +52,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: arm-unknown-linux-gnueabihf
-            os: linux-armv6
-#          - target: armv7-unknown-linux-gnueabihf
-#            os: linux-armv7
+          - os: linux-armv6
+          - os: linux-armv7
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -70,7 +68,19 @@ jobs:
         run: docker run --platform=linux/arm/v6 --rm -v $(pwd):/app -w /app ${{ secrets.DOCKERHUB_USERNAME }}/sg-mcu-com-${{ matrix.os }}:latest
       - name: Archive Code
         run: zip -r app.zip .
-
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-${{matrix.os}}
+          path: app.zip
+  github_release:
+    needs: build_released_binary
+    name: Create GitHub release
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.job_output.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v3
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
@@ -82,16 +92,33 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
+      - name: Output
+        id: job_output
+        run: echo "tag=${{ steps.tag_version.outputs.new_tag }}" >> "$GITHUB_OUTPUT"
 
-      - name: Create release
-        uses: softprops/action-gh-release@v1
+  upload_artifact:
+    needs: github_release
+    name: Upload release artifact
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: linux-armv6
+          - os: linux-armv7
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
-          files: app.zip
-          name: ${{ github.sha }}
-          tag_name: ${{ steps.tag_version.outputs.new_tag }}
-          body: |
-            ${{ github.sha }}
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: app-${{ matrix.os }}
+          path: ./${{ matrix.os }}
+      - run: tree ./${{ matrix.os }}
+      - name: List output
+        run: echo ${{ needs.github_release.outputs.tag }}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./${{ matrix.os }}/app.zip
+          asset_name: app-${{ matrix.os }}
+          tag: ${{ needs.github_release.outputs.tag }}
+          overwrite: true
