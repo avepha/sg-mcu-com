@@ -1,0 +1,70 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Release
+
+jobs:
+  build:
+    name: Create artifact for ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - target: armv6l
+            image_name: balenalib/raspberry-pi-debian-node:16.19.0-buster-build
+            platform: linux/arm/v6
+          - target: armv7
+            image_name: balenalib/raspberrypi3-debian-node:16.19.0-buster-build
+            platform: linux/arm/v7
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn build
+      - name: Prepare Directory
+        run: |
+          mkdir -p dist
+          cp -r package.json build bin dist/
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          platforms: linux/arm/v6,linux/arm/v7
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
+      - name: Run Docker image
+        run: docker run  --platform=${{ matrix.platform }} --rm -w /app -v $(pwd)/dist:/app ${{ matrix.image_name }} sh -c "npm install --production"
+      - name: Archive Code
+        run: |
+          cd dist
+          zip -r mcu-com-${{ matrix.target }}.zip .
+          cp  mcu-com-${{ matrix.target }}.zip  mcu-com-${{ matrix.target }}-${{ steps.date.outputs.date }}.zip
+      - name: List output
+        run: ls -la dist
+      - name: Upload to S3
+        run: |
+          aws s3 cp dist/mcu-com-${{ matrix.target }}-${{ steps.date.outputs.date }}.zip s3://sg-mpu-bucket/mcu-com/mcu-com-${{ matrix.target }}-${{ steps.date.outputs.date }}.zip
+          aws s3 cp dist/mcu-com-${{ matrix.target }}.zip s3://sg-mpu-bucket/mcu-com/mcu-com-${{ matrix.target }}.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ap-southeast-1
